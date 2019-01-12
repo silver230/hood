@@ -1,0 +1,26 @@
+{% extends 'base.html'%}
+{% load bootstrap4 %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <div class="row" >
+ {% if neighbour %}
+ {% for pic in neighbour %}
+<img src="{{pic.area.cdn_url}}"  class='img-responsive'alt="neighbourhood" style='margin-top:10px;'>
+   <!-- <figcaption> -->
+ <p>Name: {{pic.neighbourhood_name}}</p>
+ <p>Location: {{pic.neighbourhood_location}}</p>
+<a href="{%url 'show' pic.id %}"><button style='align:right;margin-bottom:5px'>join neighbourhood</button></a>
+
+
+   {% endfor %}
+ </div>
+</div>
+
+
+
+      {% else %}
+      <p>NO neighborhood</p>
+      {% endif %}
+{% endblock%}

@@ -1,0 +1,35 @@
+{% extends 'base.html'%}
+{% load bootstrap4 %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+  <center> <a href="{% url 'new_business' neighbour.id%}" > <button style="margin:40px;">add business</button></a></center>
+
+  <div class="row" >
+   <div class="col-md-6" style='border:1px solid black;'>
+
+      <p>Name: {{neighbour.neighbourhood_name}}</p>
+      <p>Location: {{neighbour.neighbourhood_location}}</p>
+      <img src="{{neighbour.area.cdn_url}}"  class='img-responsive'
+        alt="neighbourhood">
+
+  </div>
+ <div class="col-md-6" style='border:1px solid black;'>
+
+<h1><u>business</u></h1>
+</hr>
+ {% if biz %}
+   {% for business in biz %}
+</hr>
+      <h1>Name: {{business.business_name}}</h1>
+      <h1>Email: {{business.business_emails}}</p>
+</hr>
+  </div>
+{% endfor %}
+
+{%endif%}
+</div>
+  </div>
+
+{% endblock %}
