@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.http import HttpResponse, Http404,HttpResponseRedirect
 from .forms import *
- 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import *
 from django.contrib import messages
@@ -14,6 +14,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import View
 
 # Create your views here.
+
 def hood(request):
     current_user= request.user
     neighbour=Neighbourhood.objects.filter()
@@ -21,7 +22,7 @@ def hood(request):
 
 
     return render(request, 'index.html',{"neighbour":neighbour,"current_user":current_user,"business":business})
-
+@login_required(login_url='/accounts/login/')
 def new_neighbour(request):
     current_user = request.user
     if request.method == 'POST':
@@ -53,7 +54,7 @@ def show(request,neighbourhood_id):
     except Business.DoesNotExist:
         raise Http404()
     return render(request, 'show.html', {"neighbour":neighbour,"current_user":current_user,"business":business,"biz":biz}) 
-
+@login_required(login_url='/accounts/login/')
 def new_business(request, pk):
     neighbourhood = get_object_or_404(Neighbourhood,id=pk)
     current_user = request.user
@@ -86,14 +87,14 @@ def search(request):
         return render(request, 'search.html',{"message":message})
 
 
-# @login_required(login_url='/login')
+@login_required(login_url='/login')
 def profile(request):
     profile =Profile.objects.filter(user=request.user.id)
     neighbour =Neighbourhood.objects.filter(user=request.user.id)
     # commented = CommentForm()
     return render(request, 'profile.html', {"profile": profile, "neighbour": neighbour})
 
-# @login_required( login_url='/login' )
+@login_required(login_url='/accounts/login/')
 def edit(request):
     current_user=request.user
     if request.method == 'POST':
@@ -121,14 +122,14 @@ def edit_profile(request):
     context = {'form': form }
     return render(request, 'edit_profile.html',context)
 
-# @login_required(login_url='/login')
+@login_required(login_url='/accounts/login/')
 def dump(request,pk):
     profile =Profile.objects.filter(user=request.user.id)
     neighbour =Neighbourhood.objects.filter(user=request.user.id)
     # commented = CommentForm()
     return render(request,'dump.html',{"profile": profile, "neighbour": neighbour})
 
-# @login_required( login_url='/login' )
+@login_required(login_url='/accounts/login/')
 def create(request):
     current_user=request.user
     if request.method == 'POST':
@@ -142,22 +143,6 @@ def create(request):
     else:
         form=ProfileForm( )
     return render( request , 'create.html' , {"form": form} )
-
-
-
-
-
-def search(request):
-
-    if 'neighbourhood' in request.GET and request.GET["neighbourhood"]:
-        search_term = request.GET.get("neighbourhood")
-        searched_neighbor = Neighbourhood.search_by_name(search_term)
-        # message=f'{search_term}'
-        return render(request, 'search.html',{"neighbour": searched_neighbor})
-
-    else:
-        message = "You haven't searched for any term"
-        return render(request, 'search.html',{"message":message})
 
 
 
