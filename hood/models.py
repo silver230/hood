@@ -60,5 +60,46 @@ class Business(models.Model):
         business=cls.objects.filter(business_name__icontains=search_term)
         return business
 
+class Profile(models.Model):
+    user = models.ForeignKey(User, related_name="profilir", on_delete=models.CASCADE)
+    picture = ImageField(manual_crop='')
+    contact = models.BigIntegerField()
+    bio = models.TextField()
+    email = models.EmailField()
+    # neighbourhood = models.ForeignKey(Neighbourhood, related_name="pos", on_delete=models.CASCADE)
+
+    def get_absolute_url(self):
+        return reverse('dump', kwargs={'pk':self.pk})
+
+
+    @classmethod
+    def get_all(cls):
+        all_objects = Profile.objects.all()
+        return all_objects
+
+    @classmethod
+    def search_by_username(cls,search_term):
+        profile = cls.objects.filter(user__name__icontains=search_term)
+        return profile
+
+    @classmethod
+    def update_caption(cls,current_value,new_value):
+        fetched_object = Profile.objects.filter(name=current_value).update(name=new_value)
+
+    @classmethod
+    def get_all(cls):
+        profiles = Profile.objects.all()
+        return profiles
+
+    @classmethod
+    def save_profile(self):
+        return self.save()
+
+    @classmethod
+    def delete_profile(self):
+        return self.delete()
+
+    def __str__(self):
+        return self.user.username
     
  
